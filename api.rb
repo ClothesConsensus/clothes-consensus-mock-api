@@ -14,7 +14,7 @@ get '/looks/' do
   content_type :json
 
   looks = []
-  Dir.glob("./public/*.png").each_with_index.map do |path, idx|
+  Dir.glob("./public/*.{jpg,png,gif}").each_with_index.map do |path, idx|
     looks << {
       id: idx,
       image_url: 'http://' + request.host + '/' + path.split('/').last
