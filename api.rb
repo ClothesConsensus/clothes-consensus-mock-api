@@ -12,16 +12,16 @@ end
 
 get '/looks/' do
   content_type :json
-  looks = [{
-      id: 1,
-      image_url: 'http://' + request.host + '/look-example1.png',
-    },
-    {
-      id: 2,
-      image_url: 'http://' + request.host + '/look-example2.png',
+
+  looks = []
+  Dir.glob("./public/*.png").each_with_index.map do |path, idx|
+    looks << {
+      id: idx,
+      image_url: 'http://' + request.host + '/' + path.split('/').last
     }
-  
-  ].to_json
+  end
+
+  looks.to_json
 end
 
 get '/:filename' do |filename|
