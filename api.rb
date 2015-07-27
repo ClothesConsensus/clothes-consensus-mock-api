@@ -24,6 +24,10 @@ get '/looks/' do
   looks.to_json
 end
 
+post '/looks/' do  
+  puts params  
+end
+
 get '/:filename' do |filename|
   content_type 'image/png'
 end
