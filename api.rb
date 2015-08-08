@@ -25,13 +25,17 @@ get '/looks/' do
   looks.to_json
 end
 
-post '/looks/' do  
+post '/looks/' do
+  content_type :json
+
   image_string = params['imageString']
   file_location = './public/' + SecureRandom.hex + '.png' # just using random filenames for now, should be ids
   
   File.open(file_location, 'w') do |new_file|
     new_file.write Base64.decode64(image_string)
   end
+  
+  {message: 'The look was successfully created'}.to_json
 end
 
 get '/:filename' do |filename|
