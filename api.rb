@@ -19,8 +19,8 @@ get '/looks/' do
     looks << {
       id: idx,
       image_url: 'http://' + request.host + '/' + path.split('/').last
-    }.reverse
-  end
+    }
+  end.reverse
 
   looks.to_json
 end
