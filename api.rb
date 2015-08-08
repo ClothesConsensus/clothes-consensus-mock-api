@@ -1,6 +1,7 @@
-
-require 'sinatra'
+require 'base64'
 require 'json'
+require 'securerandom'
+require 'sinatra'
 
 configure do
   set :bind, '0.0.0.0'
@@ -18,14 +19,19 @@ get '/looks/' do
     looks << {
       id: idx,
       image_url: 'http://' + request.host + '/' + path.split('/').last
-    }
+    }.reverse
   end
 
   looks.to_json
 end
 
 post '/looks/' do  
-  puts params  
+  image_string = params['imageString']
+  file_location = './public/' + SecureRandom.hex + '.png' # just using random filenames for now, should be ids
+  
+  File.open(file_location, 'w') do |new_file|
+    new_file.write Base64.decode64(image_string)
+  end
 end
 
 get '/:filename' do |filename|
