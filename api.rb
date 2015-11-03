@@ -3,6 +3,8 @@ require 'json'
 require 'securerandom'
 require 'sinatra'
 
+require 'pry'
+
 configure do
   set :bind, '0.0.0.0'
 end
@@ -18,7 +20,7 @@ get '/looks/' do
   Dir.glob("./public/*.{jpg,png,gif}").each_with_index.map do |path, idx|
     looks << {
       id: idx,
-      image_url: 'http://' + request.host + '/' + path.split('/').last
+      image_url: 'http://' + request.host_with_port + '/' + path.split('/').last
     }
   end.reverse
 
