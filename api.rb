@@ -32,6 +32,9 @@ end
 post '/looks/' do
   content_type :json
 
+  puts params.keys
+  puts params.values
+
   image_string = params['imageString']
   file_location = './public/' + SecureRandom.hex + '.png' # just using random filenames for now, should be ids
   
