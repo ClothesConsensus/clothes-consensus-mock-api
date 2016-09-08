@@ -2,12 +2,26 @@ require 'base64'
 require 'json'
 require 'securerandom'
 require 'sinatra'
+require './models/user'
+require './config/environments'
+
 
 require 'pry'
 
 configure do
   set :bind, '0.0.0.0'
 end
+
+
+
+configure :development do
+  set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'your_database_name', pool: 2, username: 'your_username', password: 'your_password'}
+end
+
+configure :production do
+  set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'your_database_name', pool: 2, username: 'your_username', password: 'your_password'}
+end
+
 
 get '/' do
   'Hello world!'
@@ -52,6 +66,12 @@ end
 get '/user-thumbnails/:filename' do |filename|
   content_type 'image/png'
 end
+
+
+get '/users/' do
+  @users = User.all
+end
+
 
 
 
