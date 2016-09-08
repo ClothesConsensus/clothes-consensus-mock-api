@@ -12,15 +12,15 @@ configure do
   set :bind, '0.0.0.0'
 end
 
+USER_THUMBNAIL_PATH = "user-thumbnails"
 
-
-configure :development do
-  set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'your_database_name', pool: 2, username: 'your_username', password: 'your_password'}
-end
-
-configure :production do
-  set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'your_database_name', pool: 2, username: 'your_username', password: 'your_password'}
-end
+# configure :development do
+#   set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'your_database_name', pool: 2, username: 'your_username', password: 'your_password'}
+# end
+#
+# configure :production do
+#   set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'your_database_name', pool: 2, username: 'your_username', password: 'your_password'}
+# end
 
 
 get '/' do
@@ -59,27 +59,62 @@ post '/looks/' do
   {message: 'The look was successfully created'}.to_json
 end
 
+post '/looks/' do
+  content_type :json
+
+  image_string = params['image_string']
+  filename = SecureRandom.hex + '.png' # just using random filenames for now, should be ids
+  file_location = './public/looks/' + filename
+
+  Look.create(image_url: "looks/#{filename}", user_id: params['user_id'], expiration: params['expiration'], type: 0, quote: params['quote'])
+  
+  File.open(file_location, 'w') do |new_file|
+    new_file.write Base64.decode64(image_string)
+  end
+  
+  {message: 'The look was successfully created'}.to_json
+end
+
+
+
 get '/:filename' do |filename|
   content_type 'image/png'
 end
 
-get '/user-thumbnails/:filename' do |filename|
+get '/#{USER_THUMBNAIL_PATH}/:filename' do |filename|
   content_type 'image/png'
 end
 
-
 get '/users/' do
-  @users = User.all
+  content_type :json
+  @users = User.all.to_json
 end
 
-
-
+post '/users/' do
+  content_type :json
+  data = JSON.parse request.body.read
+  user = User.create(name: data['name'], profile_image: "#{USER_THUMBNAIL_PATH}/" + data['profile_image'])
+  user.to_json
+end
 
 get '/users/:id' do
-  return {
-    user_id: 1,    
-  }
+  content_type :json
+  User.find(params['id']).to_json
 end
+
+delete '/users/:id' do
+  content_type :json
+  User.delete(params['id'])
+  {message: 'Success!'}.to_json
+end
+
+post '/vote/' do
+  content_type :json
+  data = JSON.parse request.body.read
+  user = Vote.create(user_id: data['user_id'], look_id: data['look_id'], value: data['value'])
+  {message: 'Success!'}.to_json
+end
+
 
 
 # TODO move this to tools
