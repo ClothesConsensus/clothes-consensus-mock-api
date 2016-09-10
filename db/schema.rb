@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20160908164502) do
     t.string   "image_url"
     t.string   "quote"
     t.datetime "expiration"
-    t.integer  "type"
+    t.integer  "type_index"
   end
 
   create_table "users", force: :cascade do |t|
@@ -31,10 +31,9 @@ ActiveRecord::Schema.define(version: 20160908164502) do
   end
 
   create_table "votes", force: :cascade do |t|
-    t.integer  "user_id"
-    t.string   "quote"
-    t.datetime "expiration"
-    t.boolean  "value"
+    t.integer "user_id"
+    t.integer "vote_id"
+    t.boolean "value"
   end
 
 end

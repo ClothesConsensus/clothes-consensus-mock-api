@@ -5,7 +5,7 @@ class CreateLooks < ActiveRecord::Migration
       t.string :image_url
       t.string :quote
       t.datetime :expiration
-      t.integer :type
+      t.integer :type_index
     end
   end
 end
