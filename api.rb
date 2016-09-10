@@ -3,7 +3,9 @@ require 'json'
 require 'securerandom'
 require 'sinatra'
 require './models/user'
+require './models/look'
 require './config/environments'
+require './constants'
 
 
 require 'pry'
@@ -12,17 +14,6 @@ configure do
   set :bind, '0.0.0.0'
 end
 
-USER_THUMBNAIL_PATH = "user-thumbnails"
-
-# configure :development do
-#   set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'your_database_name', pool: 2, username: 'your_username', password: 'your_password'}
-# end
-#
-# configure :production do
-#   set :database, {adapter: 'postgresql',  encoding: 'unicode', database: 'your_database_name', pool: 2, username: 'your_username', password: 'your_password'}
-# end
-
-
 get '/' do
   'Hello world!'
 end
@@ -30,17 +21,17 @@ end
 get '/looks/' do
   content_type :json
 
-  looks = []
-  Dir.glob("./public/*.{jpg,png,gif}").each_with_index.map do |path, idx|
-    looks << {
-      id: idx,
-      photo_url: 'http://' + request.host_with_port + '/' + path.split('/').last,
-      message: get_random_message,
-      user: get_random_user
-    }
-  end.reverse
+  # looks = []
+  # Dir.glob("./public/*.{jpg,png,gif}").each_with_index.map do |path, idx|
+  #   looks << {
+  #     id: idx,
+  #     photo_url: 'http://' + request.host_with_port + '/' + path.split('/').last,
+  #     message: get_random_message,
+  #     user: get_random_user
+  #   }
+  # end.reverse
 
-  looks.to_json
+  Look.all.to_json(include: :user)
 end
 
 post '/looks/' do
@@ -64,7 +55,7 @@ post '/looks/' do
 
   image_string = params['image_string']
   filename = SecureRandom.hex + '.png' # just using random filenames for now, should be ids
-  file_location = './public/looks/' + filename
+  file_location = "./public/#{LOOK_IMAGE_PATH}/" + filename
 
   Look.create(image_url: "looks/#{filename}", user_id: params['user_id'], expiration: params['expiration'], type: 0, quote: params['quote'])
   
@@ -75,14 +66,20 @@ post '/looks/' do
   {message: 'The look was successfully created'}.to_json
 end
 
-
-
-get '/:filename' do |filename|
-  content_type 'image/png'
+get "/:filename" do |filename|
+  content_type "image/png"
 end
 
-get '/#{USER_THUMBNAIL_PATH}/:filename' do |filename|
-  content_type 'image/png'
+get "/#{USER_THUMBNAIL_PATH}/:filename" do |filename|
+  content_type "image/png"
+end
+
+get "/#{USER_BANNER_PATH}/:filename" do |filename|
+  content_type "image/png"
+end
+
+get "/#{LOOK_IMAGE_PATH}/:filename" do |filename|
+  content_type "image/png"
 end
 
 get '/users/' do
@@ -116,39 +113,7 @@ post '/vote/' do
 end
 
 
-
-# TODO move this to tools
-def get_random_message
-  ["Does this fit?", "Do these colors work well on me", "Is this good for business casual?"].sample
-end
-
-
-def get_random_user
-  users = [
-    {
-      id: 1,
-      photo_thumbnail: 'http://' + request.host_with_port + "/user-thumbnails/" + "1" + ".jpg",
-      name: "Ian"
-    },
-    {
-      id: 2,
-      photo_thumbnail: 'http://' + request.host_with_port + "/user-thumbnails/" + "2" + ".jpg",
-      name: "Ryan"
-    },
-    {
-      id: 3,
-      photo_thumbnail: 'http://' + request.host_with_port + "/user-thumbnails/" + "3" + ".jpg",
-      name: "Shashank"
-    },
-    {
-      id: 4,
-      photo_thumbnail: 'http://' + request.host_with_port + "/user-thumbnails/" + "4" + ".jpg",
-      name: "Tomo"
-    },
-    {
-      id: 5,
-      photo_thumbnail: 'http://' + request.host_with_port + "/user-thumbnails/" + "5" + ".jpg",
-      name: "Fat Nancy"
-    }
-  ].sample
+get '/reset_db/' do
+  require './scripts/populate_demo_data'
+  {message: 'The db was successfully reset'}.to_json
 end
