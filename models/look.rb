@@ -8,8 +8,8 @@ class Look < ActiveRecord::Base
   
   def vote_results
     {
-      yes: rand(100),
-      no: rand(50)
+      yes: votes.where(value: true).count,
+      no: votes.where(value: false).count
     }
   end
 end

@@ -2,8 +2,9 @@ require 'base64'
 require 'json'
 require 'securerandom'
 require 'sinatra'
-require './models/user'
 require './models/look'
+require './models/user'
+require './models/vote'
 require './config/environments'
 require './constants'
 
@@ -92,19 +93,23 @@ get '/users/:id/' do
   })
 end
 
-delete '/users/:id' do
+delete '/users/:id/' do
   content_type :json
   User.delete(params['id'])
   {message: 'Success!'}.to_json
 end
 
-post '/vote/' do
+post '/looks/:look_id/votes/' do
   content_type :json
   data = JSON.parse request.body.read
-  user = Vote.create(user_id: data['user_id'], look_id: data['look_id'], value: data['value'])
-  {message: 'Success!'}.to_json
+  user = Vote.create(user_id: data['user_id'], look_id: params['look_id'], value: data['vote'])
+  {message: 'The vote was successfully cast!'}.to_json
 end
 
+get '/looks/:look_id/votes/' do
+  content_type :json
+  Look.find(params[:look_id]).votes.to_json
+end
 
 get '/reset_db/' do
   require './scripts/populate_demo_data'
