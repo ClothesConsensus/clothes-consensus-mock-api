@@ -101,8 +101,10 @@ end
 
 post '/looks/:look_id/votes/' do
   content_type :json
-  data = JSON.parse request.body.read
-  user = Vote.create(user_id: data['user_id'], look_id: params['look_id'], value: data['vote'])
+  puts params.keys
+  puts params.values
+  
+  user = Vote.create(user_id: params['user_id'], look_id: params['look_id'], value: params['vote'])
   {message: 'The vote was successfully cast!'}.to_json
 end
 
