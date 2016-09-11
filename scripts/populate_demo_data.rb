@@ -111,6 +111,6 @@ Look.all.each do |look|
   25.times do
     user = User.where.not(id: look.user_id).shuffle.first
     value = rand(10) < 5
-    Vote.create(look_id: look.id, user_id: user.id, value: value)
+    look.votes.create(user_id: user.id, value: value)
   end
 end
