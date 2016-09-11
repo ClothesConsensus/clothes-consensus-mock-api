@@ -102,3 +102,15 @@ Look.create(user_id: justin.id, quote: LOOK, expiration: expiration_time, image_
 Look.create(user_id: michael.id, quote: LOOK, expiration: expiration_time, image_url: "/#{LOOK_IMAGE_PATH}/98.jpg", type_index: 0)
 Look.create(user_id: aaron.id, quote: COLORS_QUOTE, expiration: expiration_time, image_url: "/#{LOOK_IMAGE_PATH}/99.jpg", type_index: 0)
 
+
+# Generate votes
+
+Vote.destroy_all
+
+Look.all.each do |look|
+  25.times do
+    user = User.where.not(id: look.user_id).shuffle.first
+    value = rand(10) < 5
+    look.votes.create(user_id: user.id, value: value)
+  end
+end

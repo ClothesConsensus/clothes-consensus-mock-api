@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20160908164502) do
 
   create_table "votes", force: :cascade do |t|
     t.integer "user_id"
-    t.integer "vote_id"
+    t.integer "look_id"
     t.boolean "value"
   end
 
