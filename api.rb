@@ -27,14 +27,21 @@ end
 post '/looks/' do
   content_type :json
 
+  puts params.keys
+
+  expiration = params['expiration']
   image_string = params['image_string']
+  quote = params['quote']
+  user_id = params['user_id']
+  
   filename = SecureRandom.hex + '.png' # just using random filenames for now, should be ids
   file_location = "./public/#{LOOK_IMAGE_PATH}/" + filename
 
   File.open(file_location, 'w') do |new_file|
     new_file.write Base64.decode64(image_string)
   end
-  look = Look.create(image_url: "looks/#{filename}", user_id: params['user_id'], expiration: params['expiration'], type: 0, quote: params['quote'])
+  
+  look = Look.create(image_url: "looks/#{filename}", user_id: user_id, expiration: expiration, type: 0, quote: quote)
   
   look.to_json
 end
