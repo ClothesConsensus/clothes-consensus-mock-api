@@ -41,7 +41,7 @@ post '/looks/' do
     new_file.write Base64.decode64(image_string)
   end
   
-  look = Look.create(image_url: "looks/#{filename}", user_id: user_id, expiration: expiration, type: 0, quote: quote)
+  look = Look.create(image_url: "looks/#{filename}", user_id: user_id, expiration: expiration, type_index: 0, quote: quote)
   
   look.to_json
 end
