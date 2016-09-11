@@ -1,27 +1,15 @@
 require 'active_record'
 
-require 'pry'
 
 class Look < ActiveRecord::Base
+
   belongs_to :user
   has_many :votes
   
-  def vote_count
-    
-    
-    
-    
+  def vote_results
+    {
+      yes: rand(100),
+      no: rand(50)
+    }
   end
-  
-  # def as_json(options={})
-  #   {
-  #     id: id,
-  #     user: user,
-  #     image_url: image_url,
-  #     quote: quote,
-  #     expiration: expiration,
-  #     type_index: type_index
-  #   }
-  #
-  # end
 end

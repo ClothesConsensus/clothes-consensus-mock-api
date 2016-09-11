@@ -20,18 +20,7 @@ end
 
 get '/looks/' do
   content_type :json
-
-  # looks = []
-  # Dir.glob("./public/*.{jpg,png,gif}").each_with_index.map do |path, idx|
-  #   looks << {
-  #     id: idx,
-  #     photo_url: 'http://' + request.host_with_port + '/' + path.split('/').last,
-  #     message: get_random_message,
-  #     user: get_random_user
-  #   }
-  # end.reverse
-
-  Look.all.to_json(include: :user)
+  Look.all.shuffle.to_json({include: :user, methods: :vote_results})  # scrambling this now so it's more interesting
 end
 
 post '/looks/' do
