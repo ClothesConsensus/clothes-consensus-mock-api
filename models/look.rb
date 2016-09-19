@@ -2,6 +2,7 @@ require 'active_record'
 
 
 class Look < ActiveRecord::Base
+  default_scope { order('-id') }
 
   belongs_to :user
   has_many :votes
