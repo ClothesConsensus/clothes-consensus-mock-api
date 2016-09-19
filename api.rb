@@ -47,19 +47,19 @@ post '/looks/' do
 end
 
 get "/:filename" do |filename|
-  content_type "image/png"
+  content_type "image/*"
 end
 
 get "/#{USER_THUMBNAIL_PATH}/:filename" do |filename|
-  content_type "image/png"
+  content_type "image/*"
 end
 
 get "/#{USER_BANNER_PATH}/:filename" do |filename|
-  content_type "image/png"
+  content_type "image/*"
 end
 
 get "/#{LOOK_IMAGE_PATH}/:filename" do |filename|
-  content_type "image/png"
+  content_type "image/*"
 end
 
 get '/users/' do
