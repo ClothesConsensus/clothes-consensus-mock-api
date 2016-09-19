@@ -1,0 +1,40 @@
+from django.conf import settings
+from django.http import HttpResponseServerError
+from messages.api.base import BaseMessagesApi
+from messages.constants import AttestationState
+from messages.contacts.records import ContactRecord, IdentityContactUpdateRecord
+from messages import forms
+from messages import sharding
+from messages.models import Identity
+from urllib import urlencode
+from urlparse import urlparse, urlunparse, parse_qs
+from messages import http_utils
+import contacts_service_client
+import logging
+import simplejson as json
+import uuid
+group_id=37634
+organization_id=1
+account_id=204
+
+results = []
+
+next_id = "force_first_call"
+
+api_interface = contacts_service_client.ContactsServiceApiInterface(base_link="http://contacts.prod.pnw.hearsaylabs.com")
+contacts_collection = []
+kwargs = {
+    "organization_id": organization_id,
+    "group_id": group_id,
+    "identity_types": ["apollo", "salesforce_contact"]
+}
+
+
+while next_id:
+    api_response = api_interface.get_contacts_with_identity_types_for_group(**kwargs)
+    if api_response:
+        contacts_collection.extend(api_response.get('data'))
+        next_id = api_response.get('meta', {}).get('next_args', {}).get('next_id', None)
+        kwargs.update({"next_id": next_id})
+    else:
+        next_id = None
