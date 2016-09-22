@@ -1,7 +1,9 @@
+require 'gcm'
 require 'base64'
 require 'json'
 require 'securerandom'
 require 'sinatra'
+require './models/device'
 require './models/look'
 require './models/user'
 require './models/vote'
@@ -21,7 +23,8 @@ end
 
 get '/looks/' do
   content_type :json
-  Look.all.shuffle.to_json({include: :user, methods: :vote_results})  # scrambling this now so it's more interesting
+  date_range_filter = Date.today..(Date.today + 5.years)  
+  Look.all.where(expiration: date_range_filter).to_json({include: :user, methods: :vote_results})  # scrambling this now so it's more interesting
 end
 
 post '/looks/' do
@@ -106,4 +109,58 @@ end
 get '/reset_db/' do
   require './scripts/populate_demo_data'
   {message: 'The db was successfully reset'}.to_json
+end
+
+
+
+# PUSH NOTIFICATIONS
+
+# Registration endpoint mapping reg_token to user_id
+# POST /register-device?reg_token=abc&user_id=123
+post '/register-device/' do
+  if Device.where(:reg_token => params[:reg_token]).count == 0
+    device = Device.create(:reg_token => params[:reg_token], :user_id => params[:user_id], :os => 'android')
+  end
+end
+
+# Endpoint for sending a message to a user
+# POST /send?user_id=123&title=hello&body=message
+post '/send/' do
+  # Find devices with the corresponding reg_tokens
+  reg_tokens = Device.where(:user_id => params[:user_id]).map(:reg_token).to_a
+  if reg_tokens.count != 0
+    send_gcm_message(params[:title], params[:body], reg_tokens)
+  end
+end
+
+get '/send-fake-push/' do
+  gcm = GCM.new("AIzaSyDu3W-FnpvKH_U7CG3wYoQTvY_Su67t0s4")
+  reg_tokens = ["fP6-4ytom4I:APA91bF7G1yCOSCTYZKlDwn1qg3FncfL_ixYxBcF7L-BthpnCUQiufDhaYsdVG11bMZscdFcWOYlI4knRqLlK26UkM3CkJEBjXD3lSGxzOt68gyV0XZes-ZJNuWO8-ihfnHot5GEmD9s"]
+  options = { :notification => { :title => "Your look has been voted on", :body => "Go check it out" } }
+  response = gcm.send(reg_tokens, options)
+  {message: 'Success!'}.to_json
+end
+
+get '/devices/' do
+  Device.all.to_json
+end
+
+
+# Sending logic
+# send_gcm_message(["abc", "cdf"])
+def send_gcm_message(title, body, reg_tokens)
+  # Construct JSON payload
+  post_args = {
+    # :to field can also be used if there is only 1 reg token to send
+    :registration_ids => reg_tokens,
+    :data => {
+      :title  => title,
+      :body => body,
+      :anything => "foobar"
+    }
+  }
+
+  # Send the request with JSON args and headers
+  RestClient.post 'https://gcm-http.googleapis.com/gcm/send', post_args.to_json,
+    :Authorization => 'key=AIzaSyC0EVhbTNqgr69Pr8pWEdPDe5SSSIWhaU0', :content_type => :json, :accept => :json
 end
