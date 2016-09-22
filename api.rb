@@ -101,6 +101,12 @@ post '/looks/:look_id/votes/' do
   {message: 'The vote was successfully cast!'}.to_json
 end
 
+delete '/looks/:id/' do
+  content_type :json
+  Look.delete(params['id'])
+  {message: 'Success!'}.to_json
+end
+
 get '/looks/:look_id/votes/' do
   content_type :json
   Look.find(params[:look_id]).votes.to_json
