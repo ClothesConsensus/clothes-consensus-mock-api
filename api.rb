@@ -171,6 +171,8 @@ def send_gcm_message(title, body, reg_tokens)
       :anything => "foobar"
     }
   }
+  
+  print post_args
 
   # Send the request with JSON args and headers
   RestClient.post 'https://gcm-http.googleapis.com/gcm/send', post_args.to_json,
