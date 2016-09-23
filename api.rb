@@ -133,8 +133,13 @@ end
 # POST /send?user_id=123&title=hello&body=message
 post '/send/' do
   # Find devices with the corresponding reg_tokens
-  reg_tokens = Device.where(:user_id => params[:user_id]).map(:reg_token).to_a
+  devices = Device.where(:user_id => params[:user_id])
+  reg_tokens = devices.map do |device|
+    device.reg_token
+  end
+  print reg_tokens
   if reg_tokens.count != 0
+    print "Sending gcm message!"
     send_gcm_message(params[:title], params[:body], reg_tokens)
   end
 end
