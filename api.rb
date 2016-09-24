@@ -95,10 +95,17 @@ end
 
 post '/looks/:look_id/votes/' do
   content_type :json
-  puts params.keys
-  puts params.values
+
+  look_id = params['look_id']
+  Vote.create(user_id: params['user_id'], look_id: params['look_id'], value: params['vote'])
   
-  user = Vote.create(user_id: params['user_id'], look_id: params['look_id'], value: params['vote'])
+  look = Look.find(look_id)
+  
+  if should_send_push?(look)
+      devices = Device.where(user_id: look.user_id)
+      send_push_for_devices(devices)
+  end
+  
   {message: 'The vote was successfully cast!'}.to_json
 end
 
@@ -119,6 +126,21 @@ get '/reset_db/' do
 end
 
 
+# TODO helpers. Move this
+def should_send_push?(look)
+  look.votes.count > 25 || look.is_expired?
+end
+
+def send_push_for_devices(devices)
+  reg_tokens = devices.map do |device|
+    device.reg_token
+  end
+  if reg_tokens.count != 0
+    print "Sending gcm message!"
+    send_gcm_message(params[:title], params[:body], reg_tokens)
+  end  
+end
+
 
 # PUSH NOTIFICATIONS
 
@@ -135,14 +157,7 @@ end
 post '/send/' do
   # Find devices with the corresponding reg_tokens
   devices = Device.where(:user_id => params[:user_id])
-  reg_tokens = devices.map do |device|
-    device.reg_token
-  end
-  print reg_tokens
-  if reg_tokens.count != 0
-    print "Sending gcm message!"
-    send_gcm_message(params[:title], params[:body], reg_tokens)
-  end
+  send_push_for_devices(devices)
 end
 
 get '/send-fake-push/' do
@@ -172,7 +187,7 @@ def send_gcm_message(title, body, reg_tokens)
     }
   }
   
-  print post_args
+  print post_args 
 
   # Send the request with JSON args and headers
   RestClient.post 'https://gcm-http.googleapis.com/gcm/send', post_args.to_json,
