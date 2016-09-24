@@ -89,11 +89,7 @@ end
 
 get '/me/' do
   content_type :json
-  User.where(name: "Ryan").first.to_json({
-    include: [{looks: {
-      methods: :vote_results
-    }}]
-  })
+  User.where(name: "Ryan").first.to_json
 end
 
 delete '/users/:id/' do
