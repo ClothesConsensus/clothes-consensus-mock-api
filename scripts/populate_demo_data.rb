@@ -3,6 +3,7 @@ require './models/user'
 require './models/look'
 require './models/vote'
 require './constants'
+require 'pry'
 
 
 # Generate users
@@ -51,49 +52,72 @@ def generate_random_expiration_time()
   expiration_date
 end
 
+$inc_time = 5
+def incremented_time
+  time = (DateTime.now.to_time + $inc_time.minutes).to_datetime
+  $inc_time += 5
+  time
+end
+
+
+$dec_time = 5
+def decremented_time
+  time = (DateTime.now.to_time - $dec_time.minutes).to_datetime
+  $dec_time += 5
+  time
+end
+
 
 
 Look.destroy_all
 
-Look.create([
-{user_id: jack.id, quote: "Does this work?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/38.jpg", type_index: 0},
-{user_id: aaron.id, quote: "How does this color scheme look?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/1.jpg", type_index: 0},
-{user_id: joe.id, quote: "Does this outfit work?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/17.jpg", type_index: 0},
-{user_id: michael.id, quote: "How about these textures?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/25.jpg", type_index: 0},
-{user_id: fat_nancy.id, quote: "How about this shirt?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/20.jpg", type_index: 0},
-{user_id: aaron.id, quote: "How's the color on these shoes?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/2.jpg", type_index: 0},
-{user_id: aaron.id, quote: "What do you think of these shoes?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/3.jpg", type_index: 0},
-{user_id: aaron.id, quote: "Is this a cool combo?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/4.jpg", type_index: 0},
-{user_id: aaron.id, quote: "This tie with the suit?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/6.jpg", type_index: 0},
-{user_id: joe.id, quote: "Too much denim?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/7.jpg", type_index: 0},
-{user_id: joe.id, quote: "Does this work?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/9.jpg", type_index: 0},
-{user_id: justin.id, quote: "For a casual day?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/10.jpg", type_index: 0},
-{user_id: michael.id, quote: "Pretty casual?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/11.jpg", type_index: 0},
-{user_id: jack.id, quote: "Thoughts on this?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/12.jpg", type_index: 0},
-{user_id: ryan.id, quote: "Like the lack of color?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/13.jpg", type_index: 0},
-{user_id: justin.id, quote: "Cuffed?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/14.jpg", type_index: 0},
-{user_id: jack.id, quote: "Is this a cool shirt?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/15.jpg", type_index: 0},
-{user_id: ryan.id, quote: "Thoughts on this shirt?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/16.jpg", type_index: 0},
-{user_id: joe.id, quote: "The ripped jeans?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/18.jpg", type_index: 0},
-{user_id: ryan.id, quote: "Thoughts on this style?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/19.jpg", type_index: 0},
-{user_id: jack.id, quote: "Is this a cool style?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/21.jpg", type_index: 0},
-{user_id: jack.id, quote: "How about the pattern on this shirt?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/22.jpg", type_index: 0},
-{user_id: ryan.id, quote: "Is this a cool combo?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/8.jpg", type_index: 0},
-{user_id: jack.id, quote: "Do these colors work together?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/23.jpg", type_index: 0},
-{user_id: jack.id, quote: "Do you like this jacket?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/24.jpg", type_index: 0},
-{user_id: ryan.id, quote: "Thoughts on this style?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/5.jpg", type_index: 0},
-{user_id: ryan.id, quote: "Does this watch work with the shirt?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/26.jpg", type_index: 0},
-{user_id: jack.id, quote: "How about these pants?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/27.jpg", type_index: 0},
-{user_id: jack.id, quote: "Is this a cool shirt?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/28.jpg", type_index: 0},
-{user_id: joe.id, quote: "How about this style?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/29.jpg", type_index: 0},
-{user_id: justin.id, quote: "Does this look sharp?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/30.jpg", type_index: 0},
-{user_id: michael.id, quote: "Casual look?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/31.jpg", type_index: 0},
-{user_id: michael.id, quote: "Thoughts on this watch?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/32.jpg", type_index: 0},
-{user_id: justin.id, quote: "For a trip to Hawaii?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/33.jpg", type_index: 0},
-{user_id: ryan.id, quote: "Is this a cool jacket?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/34.jpg", type_index: 0},
-{user_id: aaron.id, quote: "Thoughts on this combo?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/35.jpg", type_index: 0},
-{user_id: aaron.id, quote: "Is this a cool style?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/36.jpg", type_index: 0},
-{user_id: aaron.id, quote: "Does this look too preppy?", expiration: generate_random_expiration_time(), image_url: "/#{LOOK_IMAGE_PATH}/37.jpg", type_index: 0}])
+
+Look.create([{user_id: jack.id, quote: "Does this work?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/38.jpg", type_index: 0},
+{user_id: justin.id, quote: "For a casual day?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/10.jpg", type_index: 0},
+{user_id: joe.id, quote: "Does this outfit work?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/17.jpg", type_index: 0},
+{user_id: michael.id, quote: "How about these textures?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/25.jpg", type_index: 0},
+{user_id: michael.id, quote: "Thoughts on this watch?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/32.jpg", type_index: 0},
+{user_id: fat_nancy.id, quote: "How about this shirt?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/20.jpg", type_index: 0},
+{user_id: aaron.id, quote: "What do you think of these shoes?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/3.jpg", type_index: 0},
+{user_id: aaron.id, quote: "Is this a cool combo?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/4.jpg", type_index: 0},
+{user_id: aaron.id, quote: "This tie with the suit?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/6.jpg", type_index: 0},
+{user_id: joe.id, quote: "Too much denim?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/7.jpg", type_index: 0},
+{user_id: aaron.id, quote: "How's the color on these shoes?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/2.jpg", type_index: 0},
+{user_id: joe.id, quote: "Does this work?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/9.jpg", type_index: 0},
+{user_id: michael.id, quote: "Pretty casual?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/11.jpg", type_index: 0},
+{user_id: jack.id, quote: "Thoughts on this?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/12.jpg", type_index: 0},
+{user_id: aaron.id, quote: "How does this color scheme look?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/1.jpg", type_index: 0},
+{user_id: justin.id, quote: "Cuffed?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/14.jpg", type_index: 0},
+{user_id: jack.id, quote: "Is this a cool shirt?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/15.jpg", type_index: 0},
+{user_id: joe.id, quote: "The ripped jeans?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/18.jpg", type_index: 0},
+{user_id: jack.id, quote: "Is this a cool style?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/21.jpg", type_index: 0},
+{user_id: jack.id, quote: "How about the pattern on this shirt?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/22.jpg", type_index: 0},
+{user_id: aaron.id, quote: "Thoughts on this combo?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/35.jpg", type_index: 0},
+{user_id: jack.id, quote: "Do you like this jacket?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/24.jpg", type_index: 0},
+{user_id: jack.id, quote: "How about these pants?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/27.jpg", type_index: 0},
+{user_id: jack.id, quote: "Is this a cool shirt?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/28.jpg", type_index: 0},
+{user_id: joe.id, quote: "How about this style?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/29.jpg", type_index: 0},
+{user_id: justin.id, quote: "Does this look sharp?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/30.jpg", type_index: 0},
+{user_id: michael.id, quote: "Casual look?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/31.jpg", type_index: 0},
+{user_id: jack.id, quote: "Do these colors work together?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/23.jpg", type_index: 0},
+{user_id: justin.id, quote: "For a trip to Hawaii?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/33.jpg", type_index: 0},
+{user_id: aaron.id, quote: "Is this a cool style?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/36.jpg", type_index: 0},
+{user_id: aaron.id, quote: "Does this look too preppy?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/37.jpg", type_index: 0}])
+
+
+# Looks for Ryan, the main demo users
+Look.create([{user_id: ryan.id, quote: "Thoughts on this style?", expiration: decremented_time, image_url: "/#{LOOK_IMAGE_PATH}/19.jpg", type_index: 0},
+{user_id: ryan.id, quote: "Is this a cool combo?", expiration: decremented_time, image_url: "/#{LOOK_IMAGE_PATH}/8.jpg", type_index: 0},
+{user_id: ryan.id, quote: "Thoughts on this shirt?", expiration: decremented_time, image_url: "/#{LOOK_IMAGE_PATH}/16.jpg", type_index: 0},
+{user_id: ryan.id, quote: "Is this a cool jacket?", expiration: decremented_time, image_url: "/#{LOOK_IMAGE_PATH}/34.jpg", type_index: 0},
+{user_id: ryan.id, quote: "Thoughts on this style?", expiration: decremented_time, image_url: "/#{LOOK_IMAGE_PATH}/5.jpg", type_index: 0},
+{user_id: ryan.id, quote: "Does this watch work with the shirt?", expiration: decremented_time, image_url: "/#{LOOK_IMAGE_PATH}/26.jpg", type_index: 0},
+{user_id: ryan.id, quote: "Like the lack of color?", expiration: decremented_time, image_url: "/#{LOOK_IMAGE_PATH}/13.jpg", type_index: 0}])
+
+
+
+
+
 
 
 # Generate votes

@@ -25,7 +25,7 @@ end
 get '/looks/' do
   content_type :json
   date_range_filter = Date.today..(Date.today + 5.years)  
-  Look.all.where(expiration: date_range_filter).to_json({include: :user, methods: :vote_results})  # scrambling this now so it's more interesting
+  Look.all.where(expiration: date_range_filter).to_json({include: :user, methods: :vote_results})
 end
 
 post '/looks/' do
@@ -85,6 +85,11 @@ get '/users/:id/' do
       methods: :vote_results
     }}]
   })
+end
+
+get '/me/' do
+  content_type :json
+  User.where(name: "Ryan").to_json
 end
 
 delete '/users/:id/' do
