@@ -89,7 +89,7 @@ end
 
 get '/me/' do
   content_type :json
-  User.where(name: "Ryan").to_json({
+  User.where(name: "Ryan").first.to_json({
     include: [{looks: {
       methods: :vote_results
     }}]
