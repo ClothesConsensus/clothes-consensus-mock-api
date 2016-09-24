@@ -7,3 +7,5 @@ gem 'gcm'
 gem "activerecord"
 gem "sinatra-activerecord"
 gem "rake"
+gem "rake"
+gem "rest-client"

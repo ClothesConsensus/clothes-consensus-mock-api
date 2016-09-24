@@ -13,4 +13,9 @@ class Look < ActiveRecord::Base
       no: votes.where(value: false).count
     }
   end
+  
+  def is_expired?
+    return self.expiration < DateTime.now
+  end
+  
 end
