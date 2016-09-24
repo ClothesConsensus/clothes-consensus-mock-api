@@ -156,9 +156,24 @@ end
 # Registration endpoint mapping reg_token to user_id
 # POST /register-device?reg_token=abc&user_id=123
 post '/register-device/' do
-  if Device.where(:reg_token => params[:reg_token]).count == 0
-    device = Device.create(:reg_token => params[:reg_token], :user_id => params[:user_id], :os => 'android')
+  content_type :json
+  reg_token = params[:reg_token]
+  user_id = params[:user_id]
+  device = Device.where(user_id: user_id).first
+    
+  if device
+    device.reg_token = reg_token
+  device.save
+  else
+    device = Device.create(reg_token: reg_token, user_id: user_id)
   end
+    
+  device.to_json
+end
+
+get '/destroy-all-devices/' do
+  Device.destroy_all
+  {message: 'Success!'}.to_json
 end
 
 # Endpoint for sending a message to a user
@@ -178,6 +193,7 @@ get '/send-fake-push/' do
 end
 
 get '/devices/' do
+  content_type :json
   Device.all.to_json
 end
 
