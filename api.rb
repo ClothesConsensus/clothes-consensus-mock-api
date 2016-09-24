@@ -25,7 +25,7 @@ end
 get '/looks/' do
   content_type :json
   date_range_filter = Date.today..(Date.today + 5.years)  
-  Look.all.where(expiration: date_range_filter).to_json({include: :user, methods: :vote_results})  # scrambling this now so it's more interesting
+  Look.all.where(expiration: date_range_filter).reverse.to_json({include: :user, methods: :vote_results})
 end
 
 post '/looks/' do
@@ -85,6 +85,11 @@ get '/users/:id/' do
       methods: :vote_results
     }}]
   })
+end
+
+get '/me/' do
+  content_type :json
+  User.where(name: "Ryan").first.to_json
 end
 
 delete '/users/:id/' do
@@ -147,9 +152,24 @@ end
 # Registration endpoint mapping reg_token to user_id
 # POST /register-device?reg_token=abc&user_id=123
 post '/register-device/' do
-  if Device.where(:reg_token => params[:reg_token]).count == 0
-    device = Device.create(:reg_token => params[:reg_token], :user_id => params[:user_id], :os => 'android')
+  content_type :json
+  reg_token = params[:reg_token]
+  user_id = params[:user_id]
+  device = Device.where(user_id: user_id).first
+    
+  if device
+    device.reg_token = reg_token
+  device.save
+  else
+    device = Device.create(reg_token: reg_token, user_id: user_id)
   end
+    
+  device.to_json
+end
+
+get '/destroy-all-devices/' do
+  Device.destroy_all
+  {message: 'Success!'}.to_json
 end
 
 # Endpoint for sending a message to a user
@@ -169,6 +189,7 @@ get '/send-fake-push/' do
 end
 
 get '/devices/' do
+  content_type :json
   Device.all.to_json
 end
 
@@ -180,10 +201,9 @@ def send_gcm_message(title, body, reg_tokens)
   post_args = {
     # :to field can also be used if there is only 1 reg token to send
     :registration_ids => reg_tokens,
-    :data => {
-      :title  => title,
-      :body => body,
-      :anything => "foobar"
+    :notification => {
+      :title  => "You look has been voted on",
+      :body => "Check out the results!"
     }
   }
   

@@ -2,7 +2,7 @@ require 'active_record'
 
 
 class Look < ActiveRecord::Base
-  default_scope { order('-id') }
+  default_scope { order('expiration') }
 
   belongs_to :user
   has_many :votes
@@ -17,5 +17,4 @@ class Look < ActiveRecord::Base
   def is_expired?
     return self.expiration < DateTime.now
   end
-  
 end
