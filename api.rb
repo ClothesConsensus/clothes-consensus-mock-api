@@ -205,10 +205,9 @@ def send_gcm_message(title, body, reg_tokens)
   post_args = {
     # :to field can also be used if there is only 1 reg token to send
     :registration_ids => reg_tokens,
-    :data => {
-      :title  => title,
-      :body => body,
-      :anything => "foobar"
+    :notification => {
+      :title  => "You look has been voted on",
+      :body => "Check out the results!"
     }
   }
   
