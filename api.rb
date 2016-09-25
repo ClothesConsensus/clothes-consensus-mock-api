@@ -186,7 +186,7 @@ get '/push-ryan/' do
     content_type :json
     ryan = User.where(name: "Ryan").first
     devices = Device.where(user_id: ryan.id)
-    send_push_for_devices(device)
+    send_push_for_devices(devices)
     {message: 'Sending a push to Ryan'}.to_json
 end
 
