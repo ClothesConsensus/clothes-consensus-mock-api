@@ -52,7 +52,7 @@ def generate_random_expiration_time()
   expiration_date
 end
 
-$inc_time = 5
+$inc_time = 10
 def incremented_time
   time = (DateTime.now.to_time + $inc_time.minutes).to_datetime
   $inc_time += 5

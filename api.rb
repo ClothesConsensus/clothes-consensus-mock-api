@@ -25,7 +25,7 @@ end
 get '/looks/' do
   content_type :json
   request_user_id = params['request_user_id']  # We don't want a user to be able to see his own looks
-  date_range_filter = Date.today..(Date.today + 5.years)  
+  date_range_filter = DateTime.now..(DateTime.now + 5.years)  
   Look.all.where(expiration: date_range_filter).where.not(user_id: request_user_id).reverse.to_json({include: :user, methods: :vote_results})
 end
 
