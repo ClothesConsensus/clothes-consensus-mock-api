@@ -2,7 +2,7 @@ require 'active_record'
 
 
 class Look < ActiveRecord::Base
-  default_scope { order('expiration') }
+  default_scope { order('expiration DESC') }
 
   belongs_to :user
   has_many :votes

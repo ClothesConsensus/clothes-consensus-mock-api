@@ -24,8 +24,9 @@ end
 
 get '/looks/' do
   content_type :json
-  date_range_filter = Date.today..(Date.today + 5.years)  
-  Look.all.where(expiration: date_range_filter).reverse.to_json({include: :user, methods: :vote_results})
+  request_user_id = params['request_user_id']  # We don't want a user to be able to see his own looks
+  date_range_filter = DateTime.now..(DateTime.now + 5.years)  
+  Look.all.where(expiration: date_range_filter).where.not(user_id: request_user_id).reverse.to_json({include: :user, methods: :vote_results})
 end
 
 post '/looks/' do
@@ -126,6 +127,7 @@ get '/looks/:look_id/votes/' do
 end
 
 get '/reset_db/' do
+  content_type :json
   require './scripts/populate_demo_data'
   {message: 'The db was successfully reset'}.to_json
 end
@@ -179,6 +181,16 @@ post '/send/' do
   devices = Device.where(:user_id => params[:user_id])
   send_push_for_devices(devices)
 end
+
+get '/push-ryan/' do
+    content_type :json
+    ryan = User.where(name: "Ryan").first
+    devices = Device.where(user_id: ryan.id)
+    send_push_for_devices(devices)
+    {message: 'Sending a push to Ryan'}.to_json
+end
+
+
 
 get '/send-fake-push/' do
   gcm = GCM.new("AIzaSyDu3W-FnpvKH_U7CG3wYoQTvY_Su67t0s4")
