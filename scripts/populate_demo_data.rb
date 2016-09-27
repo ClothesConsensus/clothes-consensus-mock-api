@@ -19,7 +19,7 @@ pearl = User.create(name: "Pearl", profile_image: "/#{USER_THUMBNAIL_PATH}/7.jpg
 aaron = User.create(name: "Aaron", profile_image: "/#{USER_THUMBNAIL_PATH}/8.jpg", banner_image: "/#{USER_BANNER_PATH}/8.jpg")
 jack = User.create(name: "Jack", profile_image: "/#{USER_THUMBNAIL_PATH}/9.jpg", banner_image: "/#{USER_BANNER_PATH}/9.jpg")
 amanda = User.create(name: "Amanda", profile_image: "/#{USER_THUMBNAIL_PATH}/10.jpg", banner_image: "/#{USER_BANNER_PATH}/10.jpg")
-joe = User.create(name: "Joe", profile_image: "/#{USER_THUMBNAIL_PATH}/11.jpg", banner_image: "/#{USER_BANNER_PATH}/11.jpg")
+joe = User.create(name: "Joe", profile_image: "/#{USER_THUMBNAIL_PATH}/4.jpg", banner_image: "/#{USER_BANNER_PATH}/11.jpg")
 justin = User.create(name: "Justin", profile_image: "/#{USER_THUMBNAIL_PATH}/12.jpg", banner_image: "/#{USER_BANNER_PATH}/12.jpg")
 michael = User.create(name: "Michael", profile_image: "/#{USER_THUMBNAIL_PATH}/13.jpg", banner_image: "/#{USER_BANNER_PATH}/13.jpg")
 
@@ -52,7 +52,7 @@ def generate_random_expiration_time()
   expiration_date
 end
 
-$inc_time = 10
+$inc_time = 15
 def incremented_time
   time = (DateTime.now.to_time + $inc_time.minutes).to_datetime
   $inc_time += 5
@@ -74,9 +74,9 @@ Look.destroy_all
 
 Look.create([{user_id: jack.id, quote: "Does this work?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/38.jpg", type_index: 0},
 {user_id: justin.id, quote: "For a casual day?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/10.jpg", type_index: 0},
-{user_id: joe.id, quote: "Does this outfit work?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/17.jpg", type_index: 0},
-{user_id: michael.id, quote: "How about these textures?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/25.jpg", type_index: 0},
 {user_id: michael.id, quote: "Thoughts on this watch?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/32.jpg", type_index: 0},
+{user_id: jack.id, quote: "Is this a cool style?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/21.jpg", type_index: 0},
+{user_id: michael.id, quote: "How about these textures?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/25.jpg", type_index: 0},
 {user_id: fat_nancy.id, quote: "How about this shirt?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/20.jpg", type_index: 0},
 {user_id: aaron.id, quote: "What do you think of these shoes?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/3.jpg", type_index: 0},
 {user_id: aaron.id, quote: "Is this a cool combo?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/4.jpg", type_index: 0},
@@ -90,7 +90,7 @@ Look.create([{user_id: jack.id, quote: "Does this work?", expiration: incremente
 {user_id: justin.id, quote: "Cuffed?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/14.jpg", type_index: 0},
 {user_id: jack.id, quote: "Is this a cool shirt?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/15.jpg", type_index: 0},
 {user_id: joe.id, quote: "The ripped jeans?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/18.jpg", type_index: 0},
-{user_id: jack.id, quote: "Is this a cool style?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/21.jpg", type_index: 0},
+{user_id: joe.id, quote: "Does this outfit work?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/17.jpg", type_index: 0},
 {user_id: jack.id, quote: "How about the pattern on this shirt?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/22.jpg", type_index: 0},
 {user_id: aaron.id, quote: "Thoughts on this combo?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/35.jpg", type_index: 0},
 {user_id: jack.id, quote: "Do you like this jacket?", expiration: incremented_time, image_url: "/#{LOOK_IMAGE_PATH}/24.jpg", type_index: 0},
